@@ -5,6 +5,8 @@
 AMovingPlatForm::AMovingPlatForm()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	SetMobility(EComponentMobility::Movable);
 }
 
 void AMovingPlatForm::Tick(float DeltaTime)
