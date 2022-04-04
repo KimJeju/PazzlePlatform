@@ -29,10 +29,13 @@ void AMovingPlatForm::Tick(float DeltaTime)
 	if (HasAuthority()) // hasAuthority 앞에 !(Not)을 붙이면 서버에서 실행이 아닌 클라이언트에서 실행 (Not On Server == Client)
 	{
 		FVector Location = GetActorLocation();
-		Location += FVector(Speed* DeltaTime, 0, 0);
+		FVector GlobalTargetLocation = GetTransform().TransformPosition(TargetLocation);
+		FVector Diraction = (GlobalTargetLocation - Location).GetSafeNormal();
+		Location += Speed * DeltaTime * Diraction;
 		SetActorLocation(Location);
-	
 	}
+
+	
 
 
 }
