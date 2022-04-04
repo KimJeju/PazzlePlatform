@@ -19,6 +19,9 @@ void  AMovingPlatForm::BeginPlay()
 		SetReplicates(true);
 		SetReplicateMovement(true);
 	}
+
+	GlobalStartLocation = GetActorLocation();
+	GlobalTargetLocation = GetTransform().TransformPosition(TargetLocation);
 	
 }
 
@@ -29,8 +32,17 @@ void AMovingPlatForm::Tick(float DeltaTime)
 	if (HasAuthority()) // hasAuthority 앞에 !(Not)을 붙이면 서버에서 실행이 아닌 클라이언트에서 실행 (Not On Server == Client)
 	{
 		FVector Location = GetActorLocation();
-		FVector GlobalTargetLocation = GetTransform().TransformPosition(TargetLocation);
-		FVector Diraction = (GlobalTargetLocation - Location).GetSafeNormal();
+		float JourneyLenth = (GlobalTargetLocation - GlobalStartLocation).Size();
+		float JourneyTravelled = (Location - GlobalStartLocation).Size();
+
+		if (JourneyTravelled >= JourneyLenth)
+		{
+			FVector Swap = GlobalStartLocation;
+			GlobalStartLocation = GlobalTargetLocation;
+			GlobalTargetLocation = Swap;
+		}
+
+		FVector Diraction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
 		Location += Speed * DeltaTime * Diraction;
 		SetActorLocation(Location);
 	}
