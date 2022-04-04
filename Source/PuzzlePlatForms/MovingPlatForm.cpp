@@ -9,13 +9,25 @@ AMovingPlatForm::AMovingPlatForm()
 	SetMobility(EComponentMobility::Movable);
 }
 
+void  AMovingPlatForm::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+	if (HasAuthority())
+	{
+		SetReplicates(true);
+		SetReplicateMovement(true);
+	}
+	
+}
+
 void AMovingPlatForm::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (HasAuthority())
+	if (HasAuthority()) // hasAuthority 앞에 !(Not)을 붙이면 서버에서 실행이 아닌 클라이언트에서 실행 (Not On Server == Client)
 	{
-
 		FVector Location = GetActorLocation();
 		Location += FVector(Speed* DeltaTime, 0, 0);
 		SetActorLocation(Location);

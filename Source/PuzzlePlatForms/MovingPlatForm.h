@@ -17,6 +17,8 @@ class PUZZLEPLATFORMS_API AMovingPlatForm : public AStaticMeshActor
 public:
 	AMovingPlatForm(); 
 
+	virtual void BeginPlay() override;
+
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
